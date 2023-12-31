@@ -1,0 +1,117 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: black;
+}
+
+.header-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sudoku-container {
+  width: 90%;
+  height: 90vh;
+  /* background-color: red; */
+}
+.button-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+.button-container .button {
+  font-weight: bold;
+  color: white;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  padding: 1%;
+  justify-content: space-around;
+  width: 18%;
+  border-radius: 10%;
+  font-size: 800;
+      background-color: blue;
+}
+.containGridBtn{
+  width:100%;
+  height: 60%;
+  /* background-color: blueviolet; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+.grid-container{
+  width:calc(70%);
+  height: 100%;
+  /* background-color: aquamarine; */
+}
+
+
+.actionbtn-container{
+  width: 20%;
+  height: 100%;
+  /* background-color: brown; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.actionbtn{
+      background-color: blue;
+        width: 85%;
+        height: 20%;
+        color: white;
+        border-radius: 10%;
+        font-size: 90%;
+      
+}
+
+.gridinput{
+  width: calc(100% / 9);
+  height: calc(100% /9);
+  background-color: white;
+  text-align: center;
+}
+
+/* for remove scroll from input type */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.win-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: wrap;
+  /* background-color: burlywood; */
+}
+
+.winline {
+  color: white;
+  font-size: xx-large;
+    font-weight: 800;
+}
+
+#input3,#input12,#input21,#input6,#input15,#input24,#input30,#input39,#input48,#input33,#input42,#input51,#input57,#input66,#input75,#input60,#input69,#input78{
+  border-right:10px solid black;
+}
+input[type="number"]:focus {
+  outline: none;
+}
+
+.winline,iframe{
+  display:none;
+}
+
+button:hover{
+  cursor: pointer;
+  border:1px solid red;
+}
