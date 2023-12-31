@@ -6,22 +6,35 @@ const board = Array.from({ length: 9 }, () => Array(9).fill(0));
 const audio=new Audio('gamestart.mp3');
 const loss=new Audio('lossmusic.mp3');
 const clickmusic=new Audio('mouseclick.mp3');
-
-
+const result=document.querySelectorAll('.winline');
+const iframe=document.querySelectorAll('iframe');
+let vefiedbtnclick=false;
+const coininput=document.querySelector("#coininput");
+let solutionobserve=false;
 
 startbtn.addEventListener("click", (event) => {
+  result[0].style.display="none";
+      iframe[0].style.display="none";
+      result[1].style.display="none";
+      iframe[1].style.display="none";
   start=true;
   
   for(let input of inputlist){
     input.value='';
     input.style.backgroundColor="white";
-    input.readOnly=false;
+    input.readOnly=true;
   }
   const difficultyLevel = prompt(
     "Enter difficulty level (easy, medium, hard): "
   );
+  if(difficultyLevel===null){
+    location.reload();
+    return;
+  }
+  alert("As you are playing this game first time, I will give you 50 coins as initial value. Remember if you observe the solution 10 coins will deducted as penalty. if you are the Winner then 20 coins will be added only when if you actually done by yourself but if you observe the solution first then only 5 coins will give you")
   audio.play();
   loss.pause();
+  coininput.value=50;
   
   const sudokuPuzzle = generateSudoku(difficultyLevel);
   let k=0;
@@ -33,6 +46,9 @@ startbtn.addEventListener("click", (event) => {
         inputlist[k].style.backgroundColor="yellow";
         inputlist[k].style.color="black";
       }
+      else{
+        inputlist[k].readOnly=false;
+      }
 
       k++;
     }
@@ -43,10 +59,16 @@ startbtn.addEventListener("click", (event) => {
 const solbtn=document.querySelector("#solution-btn");
 solbtn.addEventListener("click",(event)=>{
 
+
+  result[0].style.display="none";
+      iframe[0].style.display="none";
+      result[1].style.display="none";
+      iframe[1].style.display="none";
   if(start===false) {
     alert('first start the game !');
     return ;
   }
+  if(solutionobserve===true) return;
   solveSudoku(board);
  
   let k=0;
@@ -60,29 +82,58 @@ solbtn.addEventListener("click",(event)=>{
       k++;
     }
   }
+
+  solutionobserve=true;
+  coininput.value=eval(parseInt(coininput.value)-10);;
 });
 
 const playagainbtn=document.querySelector("#play-again-btn");
 playagainbtn.addEventListener("click",(event)=>{
-  startbtn.click();
+  result[0].style.display="none";
+      iframe[0].style.display="none";
+      result[1].style.display="none";
+      iframe[1].style.display="none";
+  location.reload();
 })
+
+
 
 let ans=true;
 const verifybtn=document.querySelector("#verify-btn");
 verifybtn.addEventListener("click",(event)=>{
+  vefiedbtnclick=true;
+  result[0].style.display="none";
+      iframe[0].style.display="none";
+      result[1].style.display="none";
+      iframe[1].style.display="none";
   if(start===false) {
     alert('first start the game !');
     return ;
   }
+
+  if(verifybtn===true) return ;
   for(let i=0;i<=8;i++){
     for(let j=0;j<=8;j++){
-        board[i][j]=inputlist[i*9+j].value;
-        
+      if(inputlist[i*9+j].value===``){
+        alert('Please complete the Sudoku');
+        return;
+      }
     }
   }
-  printSudoku(board);
-  const result=document.querySelectorAll('.winline');
-  const iframe=document.querySelectorAll('iframe');
+
+  for(let i=0;i<=8;i++){
+    for(let j=0;j<=8;j++){
+      board[i][j]=inputlist[i*9+j].value;
+    }
+  }
+
+  // now sare buttons ko off karna hai
+  for(let i=0;i<=8;i++){
+    for(let j=0;j<=8;j++){
+      inputlist[i*9+j].readOnly=true;
+    }
+  }
+
   for(let i=0;i<=8;i++){
     for(let j=0;j<=8;j++){
       if(isValid(board,i,j,inputlist[i*9+j].value)===false){
@@ -90,18 +141,13 @@ verifybtn.addEventListener("click",(event)=>{
         inputlist[i*9+j].style.color="white";
         ans=false;
         break;
-        console.log('wrong');
-        return ;
       }
-      // }else{
-      //   inputlist[i*9+j].style.backgroundColor="green";
-      //   inputlist[i*9+j].style.color="white";
-      // }
     }
     if(ans===false){
       audio.pause();
       loss.play();
       result[1].style.display="block";
+      result[1].style.color="yellow";
       iframe[1].style.display="block";
       break;
     }
@@ -109,7 +155,14 @@ verifybtn.addEventListener("click",(event)=>{
 
   if(ans===true){
     result[0].style.display="block";
+    result[0].style.color="yellow";
       iframe[0].style.display="block";
+      if(solutionobserve===true){
+        coininput.value=eval(parseInt(coininput.value)+5);
+      }
+      else{
+        coininput.value=eval(parseInt(coininput.value)+20);
+      }
   }
 
   
@@ -140,6 +193,13 @@ resumebtn.addEventListener('click',()=>{
     loss.play();
   }
   else audio.play();
+
+  if(vefiedbtnclick===true){
+    for(let input of inputlist){
+      input.readOnly=true;
+    }
+    return ;
+  }
   for(let input of inputlist){
     if(input.style.backgroundColor==="yellow") continue;
     input.readOnly=false;
@@ -148,26 +208,6 @@ resumebtn.addEventListener('click',()=>{
 
 
 function isValid(board, row, col, num) {
-  // // Check if the number is not in the current row or column
-  // if (board[row].includes(num) || board.some((r) => r[col] === num)) {
-
-  //   return false;
-  // }
-
-  // // Check if the number is not in the current 3x3 box
-  // const startRow = 3 * Math.floor(row / 3);
-  // const startCol = 3 * Math.floor(col / 3);
-  // for (let i = startRow; i < startRow + 3; i++) {
-  //   for (let j = startCol; j < startCol + 3; j++) {
-  //     if (board[i][j] === num) {
-
-  //       return false;
-  //     }
-  //   }
-  // }
-
-  // return true;
-
 
   for(let i=0;i<9;i++){
             if(i!=col && board[row][i]===num){
