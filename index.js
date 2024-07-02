@@ -24,12 +24,13 @@ startbtn.addEventListener("click", (event) => {
     input.style.backgroundColor="white";
     input.readOnly=true;
   }
-  const difficultyLevel = prompt(
+  let difficultyLevel = prompt(
     "Enter difficulty level (easy, medium, hard): "
   );
-  if(difficultyLevel===null){
-    location.reload();
-    return;
+  while(difficultyLevel!=="easy" && difficultyLevel!=="medium" && difficultyLevel!=="hard"){
+    difficultyLevel = prompt(
+    "Enter difficulty level (easy, medium, hard): "
+  );
   }
   alert("As you are playing this game first time, I will give you 50 coins as initial value. Remember if you observe the solution 10 coins will deducted as penalty. if you are the Winner then 20 coins will be added only when if you actually done by yourself but if you observe the solution first then only 5 coins will give you")
   audio.play();
@@ -211,22 +212,16 @@ function isValid(board, row, col, num) {
 
   for(let i=0;i<9;i++){
             if(i!=col && board[row][i]===num){
-              console.log(row,col);
-              console.log('hy');
                 return false;
             }
 
             if(i!=row && board[i][col]===num){
-              console.log(row,col);
-              console.log('hello');
                 return false;
             }
 
             let x=3*(Math.floor(row/3)) + Math.floor(i/3);
             let y=3*(Math.floor(col/3)) + i%3;
             if((x!=row && y!=col) && board[x][y] === num){
-              console.log(row,col);
-              console.log('my');
                 return false;
             }
   }
